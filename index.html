@@ -136,25 +136,27 @@
         video#video::-webkit-media-controls-enclosure {
             display: none !important;
         }
-       .overlay-button {
-  height: auto; /* 自适应高度 */
-  padding: 12px 24px; /* 调整内边距 */
-  white-space: nowrap; /* 禁止文本换行 */
-        }
+        /* 在原有<style>标签内追加以下样式 */
+.bilingual-btn {
+  display: inline-flex;        /* 使用弹性盒子布局 */
+  flex-direction: column;      /* 子元素垂直排列 */
+  align-items: center;         /* 文本水平居中 */
+  height: auto;                /* 高度自适应 */
+  padding: 12px 24px;          /* 调整内边距 */
+  white-space: normal;         /* 允许自动换行 */
+}
 
-      .zh-text, .en-text {
-  display: block; /* 块级元素实现上下排列 */
-  line-height: 1.2; /* 调整行高 */
-         }
+.zh-text {
+  font-size: 16px;             /* 中文主文字 */
+  font-weight: 500;
+  margin-bottom: 4px;          /* 中英文间距 */
+}
 
-        .zh-text {
-  font-size: 16px; /* 中文主文字大小 */
-         }
-
-     .en-text {
-  font-size: 12px; /* 英文副文字大小 */
-  color: rgba(0, 0, 0, 0.7); /* 副文字颜色减弱 */
-           }
+.en-text {
+  font-size: 12px;             /* 英文副文字 */
+  color: rgba(0, 0, 0, 0.7);   /* 弱化颜色 */
+  font-weight: 400;
+}
     </style>
 </head>
 
@@ -167,14 +169,15 @@
                 <p class="overlay-description">The following may not be suitable for people <b>under the age of
                         18</b> and we need to confirm your age.</p>
                 <div class="overlay-buttons-wrapper">
-<div id="accept-button" class="overlay-button">
+<div id="accept-button" class="overlay-button bilingual-btn">
   <div class="zh-text">已满18岁</div>
   <div class="en-text">Over 18</div>
 </div>
-<div id="decline-button" class="overlay-button">
+<div id="decline-button" class="overlay-button bilingual-btn">
   <div class="zh-text">未满18岁</div>
   <div class="en-text">Under 18</div>
-</div>                </div>
+</div>
+                </div>
             </div>
         </div>
     </div>
