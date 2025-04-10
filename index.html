@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>年龄验证</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; padding: 50px; }
+    button { padding: 10px 20px; margin: 10px; cursor: pointer; }
+  </style>
+</head>
+<body>
+  <script>
+    // 页面加载时弹出验证对话框
+    const isAdult = confirm("您是否已满18岁？");
+    if (isAdult) {
+      window.location.href = "https://your-video-link"; // 替换为视频链接
+    } else {
+      alert("您未满18岁，无法访问！");
+      window.location.href = "about:blank"; // 关闭或跳转空白页
+    }
+  </script>
+</body>
+</html>
