@@ -1,74 +1,376 @@
 <!DOCTYPE html>
 <html lang="zh">
-  
-  <head>
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>❤️站❤️长❤️推❤️荐❤️</title>
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-CJ29JG626Y"></script>
-    <script>window.dataLayer = window.dataLayer || [];
-      function gtag() {
-        dataLayer.push(arguments);
-      }
-      gtag('js', new Date());
-
-      gtag('config', 'G-CJ29JG626Y');</script>
-    <style type="text/css">p { margin: 0; } *, *::before, *::after { box-sizing: border-box; } .overlay, .scare { position: fixed; top: 0; left: 0; height: 100vh; width: 100vw; } p.overlay-title { font-size: 24px; font-weight: 900; color: black; line-height: 1; margin-bottom: 16px; } .overlay-button { display: inline-flex; align-items: center; height: 40px; padding-right: 24px; padding-left: 24px; font-size: 16px; font-weight: 500; line-height: 1; border-radius: 4px; margin: 4px; cursor: pointer; } .overlay-buttons-wrapper { margin: 24px -8px -8px; } #accept-button { background-color: rgb(255, 0, 0); color: white; } #decline-button { color: rgb(0, 0, 0); border: 2px solid rgb(0, 0, 0); } p.overlay-description { font-size: 16px; font-weight: 400; color: rgba(0, 0, 0, 0.5); line-height: 1.25; margin-bottom: 16px; } a.overlay-link { display: inline-block; text-decoration: none; font-size: 16px; font-weight: 500; color: rgb(255, 0, 0); line-height: 1; position: relative; margin-top: 16px; } a.overlay-link::before { position: absolute; content: ""; height: calc(50% + 4px); width: calc(100% + 8px); bottom: -4px; left: -4px; background-color: rgba(132, 94, 194, 0.1); } .overlay-body { max-width: 512px; text-align: center; font-family: "Inter", sans-serif; } .overlay[hidden] { display: none; } .overlay { z-index: 2; display: flex; align-items: center; justify-content: center; background-image: url(https://www.loliapi.com/acg/); background-repeat: no-repeat; background-size: cover; background-position: center 0; } .text-bg { background-color: rgba(255, 255, 255, 0.6); padding: 24px; } .scare { z-index: 1; } video#video { height: 100%; width: 100%; object-fit: cover; } video#video::-webkit-media-controls-enclosure { display: none !important; } .bilingual-btn { display: inline-flex; flex-direction: column; align-items: center; height: auto; padding: 12px 24px; white-space: normal; } .zh-text { font-size: 16px; font-weight: 500; margin-bottom: 4px; } .en-text { font-size: 12px; color: rgba(0, 0, 0, 0.7); font-weight: 500; }</style></head>
-  
-  <body>
-    <div id="overlay" class="overlay">
-      <div class="text-bg">
-        <div class="overlay-body">
-          <p class="overlay-title">您是否已满18岁</p>
-          <p class="overlay-description">以下内容可能不适合
-            <b>未满18岁</b>的人群观看，我们需要确认您的年龄。</p>
-          <p class="overlay-description">The following may not be suitable for people
-            <b>under the age of 18</b>and we need to confirm your age.</p>
-          <div class="overlay-buttons-wrapper">
-            <div id="accept-button" class="overlay-button bilingual-btn">
-              <div class="zh-text">已满18岁</div>
-              <div class="en-text">Over 18</div></div>
-            <div id="decline-button" class="overlay-button bilingual-btn">
-              <div class="zh-text">未满18岁</div>
-              <div class="en-text">Under 18</div></div>
-          </div>
+    <style>
+        html.lang-zh .en-text,
+        html.lang-en .zh-text {
+            display: none !important;
+        }
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+        }
+        body {
+            background-image: url(https://www.loliapi.com/acg/);
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            z-index: 0;
+        }
+        .scare {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 4;
+            pointer-events: none;
+        }
+        video#video {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            opacity: 1;
+        }
+        #captcha-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 3;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: rgba(255,255,255,0.5);
+            backdrop-filter: blur(2px);
+        }
+        .overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 2;
+            display: none;
+            justify-content: center;
+            align-items: center;
+            background: rgba(0,0,0,0.5);
+        }
+        .text-bg {
+            background-color: rgba(255, 255, 255, 0.9);
+            padding: 24px;
+            border-radius: 8px;
+        }
+        .g-recaptcha {
+            position: relative;
+            width: 304px;
+            height: 78px;
+            background: white;
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            padding: 0 24px;
+            transition: border-color 0.2s;
+        }
+        .icon-container {
+            position: relative;
+            width: 24px;
+            height: 24px;
+            margin-right: 16px;
+        }
+        .shield-icon {
+            width: 24px;
+            height: 24px;
+            margin-left: auto;
+        }
+        .shield-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+        .square-button {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            border: 2px solid #dadce0;
+            border-radius: 4px;
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24"><path fill="none" stroke="#808080" stroke-width="2" d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/></svg>') no-repeat center;
+            background-size: 16px;
+            transition: opacity 0.3s;
+            z-index: 1;
+        }
+        .spinner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            border: 2px solid #dadce0;
+            border-top-color: #4285f4;
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            display: none;
+            z-index: 2;
+        }
+        .checkmark {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 24px;
+            height: 24px;
+            opacity: 0;
+            pointer-events: none;
+            z-index: 3;
+        }
+        .checkmark svg {
+            width: 100%;
+            height: 100%;
+        }
+        .checkmark path {
+            stroke: #34a853;
+            stroke-width: 2;
+            fill: none;
+            stroke-dasharray: 32px;
+            stroke-dashoffset: 32px;
+            animation: dash 0.4s ease-in-out forwards;
+            animation-delay: 0.2s;
+        }
+        .g-recaptcha.loading .square-button {
+            opacity: 0;
+            pointer-events: none;
+        }
+        .g-recaptcha.checked .square-button {
+            display: none;
+        }
+        .g-recaptcha.loading .spinner,
+        .g-recaptcha.checked .checkmark {
+            display: block;
+            opacity: 1;
+        }
+        @keyframes spin { 
+            0% { transform: rotate(0deg); } 
+            100% { transform: rotate(360deg); } 
+        }
+        @keyframes dash {
+            to {
+                stroke-dashoffset: 0;
+            }
+        }
+        p.overlay-title { 
+            font-size: 24px; 
+            font-weight: 900; 
+            color: black; 
+            line-height: 1; 
+            margin-bottom: 16px; 
+        }
+        .overlay-buttons-wrapper { 
+            margin: 24px -8px -8px; 
+        }
+        #accept-button { 
+            background-color: #ff0000; 
+            color: white; 
+        }
+        #decline-button { 
+            color: #000000; 
+            border: 2px solid #000000; 
+        }
+        p.overlay-description { 
+            font-size: 16px; 
+            font-weight: 400; 
+            color: rgba(0, 0, 0, 0.5); 
+            line-height: 1.25; 
+            margin-bottom: 16px; 
+        }
+        a.overlay-link { 
+            display: inline-block; 
+            text-decoration: none; 
+            font-size: 16px; 
+            font-weight: 500; 
+            color: #ff0000; 
+            line-height: 1; 
+            position: relative; 
+            margin-top: 16px; 
+        }
+        a.overlay-link::before { 
+            position: absolute; 
+            content: ""; 
+            height: calc(50% + 4px); 
+            width: calc(100% + 8px); 
+            bottom: -4px; 
+            left: -4px; 
+            background-color: rgba(132, 94, 194, 0.1); 
+        }
+        .overlay-body { 
+            max-width: 512px; 
+            text-align: center; 
+            font-family: "Inter", sans-serif; 
+        }
+        video#video::-webkit-media-controls-enclosure { 
+            display: none !important; 
+        }
+        .bilingual-btn { 
+            display: inline-flex; 
+            flex-direction: column; 
+            align-items: center; 
+            height: auto; 
+            padding: 12px 24px; 
+            white-space: normal; 
+        }
+        .zh-text { 
+            font-size: 16px; 
+            font-weight: 500; 
+            margin-bottom: 4px; 
+        }
+        .en-text { 
+            font-size: 12px; 
+            color: rgba(0, 0, 0, 0.7); 
+            font-weight: 500; 
+        }
+        .shield-body {
+            fill: url(#shieldGradient);
+        }
+        .lock-icon {
+            fill: white;
+            stroke: #2c3e50;
+            stroke-width: 2px;
+        }
+    </style>
+</head>
+<body>
+    <div id="captcha-container">
+        <div class="g-recaptcha" 
+             id="captcha-accept"
+             role="checkbox" 
+             aria-label="进行人机验证" 
+             tabindex="0"
+             aria-checked="false">
+            <div class="icon-container">
+                <div class="square-button"></div>
+                <div class="spinner"></div>
+                <div class="checkmark">
+                    <svg viewBox="0 0 24 24">
+                        <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z"/>
+                    </svg>
+                </div>
+            </div>
+            <div class="text bilingual-text">
+                <div class="zh-text">进行人机身份验证</div>
+                <div class="en-text">Verify you're human</div>
+            </div>
+            <div class="shield-icon">
+                <svg viewBox="0 0 100 100">
+                    <path class="shield-body" d="M50 0L95 25V75L50 100L5 75V25L50 0Z" />
+                    <g transform="translate(50 50)">
+                        <circle class="lock-icon" cx="0" cy="0" r="15" />
+                        <rect class="lock-icon" x="-5" y="-5" width="10" height="20" rx="2" />
+                        <path class="lock-icon" d="M-8 5C-8 5 -6 10 -2 10C2 10 4 5 4 5" />
+                    </g>
+                    <defs>
+                        <linearGradient id="shieldGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                            <stop offset="0%" stop-color="#2980b9" />
+                            <stop offset="100%" stop-color="#2c3e50" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+            </div>
         </div>
-      </div>
+    </div>
+    <div id="overlay" class="overlay">
+        <div class="text-bg">
+            <div class="overlay-body">
+                <p class="overlay-title">
+                    <span class="zh-text">您是否已满18岁</span>
+                    <span class="en-text">Are you over 18?</span>
+                </p>
+                <p class="overlay-description">
+                    <span class="zh-text">以下内容可能不适合<b>未满18岁</b>的人群观看，我们需要确认您的年龄。</span>
+                    <span class="en-text">The following may not be suitable for people <b>under 18</b>. We need to confirm your age.</span>
+                </p>
+                <div class="overlay-buttons-wrapper">
+                    <div id="accept-button" class="overlay-button bilingual-btn">
+                        <div class="zh-text">已满18岁</div>
+                        <div class="en-text">Over 18</div>
+                    </div>
+                    <div id="decline-button" class="overlay-button bilingual-btn">
+                        <div class="zh-text">未满18岁</div>
+                        <div class="en-text">Under 18</div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="scare">
-      <video id="video" class="video" src="https://vdse.bdstatic.com/192d9a98d782d9c74c96f09db9378d93.mp4" loop="loop"></video>
-      <img src="https://count.getloli.com/@KDjsss?name=KDjsss&theme=random&padding=8&offset=0&align=top&scale=1&pixelated=1&darkmode=auto" style="display: none;"></div>
-    <script type="text/javascript">const video = document.getElementById("video");
-      const overlay = document.getElementById("overlay");
-      const declineButton = document.getElementById("decline-button");
-      const acceptButton = document.getElementById("accept-button");
-      let hasClicked;
-      window.onbeforeunload = function() {
-        if (hasClicked) return true;
-      };
-      function buttonClick1(event) {
-        event.preventDefault();
-        if (!hasClicked) hasClicked = true;
-        overlay.hidden = true;
-        video.play();
-        videoClick();
-      }
-      function buttonClick2(event) {
-        window.location.href = 'https://xingye.me/game/index.php'
-      }
-      function videoClick(event) {
-        if (event) event.preventDefault();
-        // if not fullscreen
-        const {
-          documentElement
-        } = document;
-        if (documentElement.requestFullscreen) documentElement.requestFullscreen();
-        else if (documentElement.mozRequestFullScreen) documentElement.mozRequestFullScreen();
-        else if (documentElement.webkitRequestFullscreen) documentElement.webkitRequestFullscreen();
-        else if (documentElement.msRequestFullscreen) documentElement.msRequestFullscreen();
-      }
-      acceptButton.addEventListener("click", buttonClick1);
-      declineButton.addEventListener("click", buttonClick2);
-      video.addEventListener("click", videoClick);</script>
-  </body>
+        <video id="video" class="video" src="https://vdse.bdstatic.com/192d9a98d782d9c74c96f09db9378d93.mp4" loop muted></video>
+        <img src="https://count.getloli.com/@KDjsss?name=KDjsss&theme=random&padding=8&offset=0&align=top&scale=1&pixelated=1&darkmode=auto" style="display: none;">
+    </div>
+    <script>
+        (function() {
+            const userLang = navigator.language || navigator.userLanguage;
+            const isChinese = /zh/i.test(userLang);
+            document.documentElement.className = isChinese ? 'lang-zh' : 'lang-en';
+        })();
+        document.addEventListener('DOMContentLoaded', () => {
+            const captcha = document.getElementById('captcha-accept');
+            const captchaContainer = document.getElementById('captcha-container');
+            const overlay = document.getElementById('overlay');
+            const video = document.getElementById("video");
+            overlay.style.display = 'none';
+            captcha.addEventListener('click', () => {
+                captcha.classList.add('loading');
+                setTimeout(() => {
+                    captcha.classList.remove('loading');
+                    captcha.classList.add('checked');
+                    captcha.querySelector('.text').innerHTML = `
+                        <div class="zh-text">验证成功</div>
+                        <div class="en-text">Verification success</div>
+                    `;
+                    setTimeout(() => {
+                        captchaContainer.style.display = 'none';
+                        overlay.style.display = 'flex';
+                    }, 500);
+                }, 1200);
+            });
+            const acceptButton = document.getElementById("accept-button");
+            const declineButton = document.getElementById("decline-button");
+            function buttonClick1(event) {
+                event.preventDefault();
+                overlay.style.display = 'none';
+                const scare = document.querySelector('.scare');
+                scare.style.zIndex = '9999';
+                video.muted = false;
+                video.volume = 1.0;
+                video.play().catch(error => {
+                    console.log("自动播放失败，需要用户交互");
+                });
+                videoClick();
+            }
+            function buttonClick2(event) {
+                window.location.href = 'https://xingye.me/game/index.php'
+            }
+            function videoClick(event) {
+                if (event) event.preventDefault();
+                const { documentElement } = document;
+                if (documentElement.requestFullscreen) documentElement.requestFullscreen();
+                else if (documentElement.mozRequestFullScreen) documentElement.mozRequestFullScreen();
+                else if (documentElement.webkitRequestFullscreen) documentElement.webkitRequestFullscreen();
+                else if (documentElement.msRequestFullscreen) documentElement.msRequestFullscreen();
+            }
+            acceptButton.addEventListener("click", buttonClick1);
+            declineButton.addEventListener("click", buttonClick2);
+            video.addEventListener("click", videoClick);
+        });
+    </script>
+    RG8geW91IGxpa2UgaXQ/ICgxMTQ1MTQxOTE5MTgxMCnwn5Kp8J+SqfCfkqk=
+</body>
+</html>
