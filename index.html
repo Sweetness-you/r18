@@ -24,6 +24,7 @@
             z-index: 0;
         }
         .scare {
+            display: none;
             position: fixed;
             top: 0;
             left: 0;
@@ -311,7 +312,7 @@
         </div>
     </div>
     <div class="scare">
-        <video id="video" class="video" src="https://vdse.bdstatic.com/192d9a98d782d9c74c96f09db9378d93.mp4" loop muted></video>
+        <video id="video" class="video" src="https://vdse.bdstatic.com/192d9a98d782d9c74c96f09db9378d93.mp4" ></video>
         <img src="https://count.getloli.com/@KDjsss?name=KDjsss&theme=random&padding=8&offset=0&align=top&scale=1&pixelated=1&darkmode=auto" style="display: none;">
     </div>
     <script>
@@ -347,8 +348,8 @@
                 event.preventDefault();
                 overlay.style.display = 'none';
                 const scare = document.querySelector('.scare');
+                scare.style.display = 'block';
                 scare.style.zIndex = '9999';
-                video.muted = false;
                 video.volume = 1.0;
                 video.play().catch(error => {
                     console.log("自动播放失败，需要用户交互");
